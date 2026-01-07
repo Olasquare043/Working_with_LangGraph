@@ -110,7 +110,7 @@ def interactive_chat():
 
 
 if __name__ == "__main__":
-    # runnig the app
+    # running the app
     print("\n" + "="*70)
     print("🤖 Welcome to Olasquare Gadget Limited")
     print("1. Check the agent FlowChart")

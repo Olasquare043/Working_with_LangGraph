@@ -16,7 +16,7 @@ from langchain_core.tools import tool
 from typing import Literal
 from langchain_openai import ChatOpenAI
 import requests
-from duckduckgo_search import DDGS
+from ddgs import DDGS
 
 # ===========================================================================
 
@@ -25,10 +25,10 @@ load_dotenv()
 llm= ChatOpenAI(model='gpt-4o-mini', temperature=0)
 # ===========================================================================
 # define the system prompt
-sys_msg="""
+sys_msg=SystemMessage(content="""
 You are a helpful assistant with access to tools.
 Only use the avalable tools when necessary- for simple questions, answer directly
-"""
+""")
 # ====================== Building nodes/tools================================
 # ------------------------Get weather tool----------------------
 @tool
@@ -47,7 +47,7 @@ def check_weather(city:str) -> str:
         "units": "metric"
     }
     response= requests.get(url, params=params)
-    if response.status_code!="200":
+    if response.status_code!=200:
         return f'Failed to get weather for {city}. Reason:{response.text}'
     data= response.json()
     weather= data["weather"][0]["description"]
@@ -113,7 +113,7 @@ def web_search(query: str, max_result:int =5)->str:
     results_text=[]
 
     with DDGS() as dggs:
-        results= dggs.text(query, max_result=max_result)
+        results= dggs.text(query, max_results=max_result)
 
         for i, r in enumerate(results,start=1):
             title=r.get("title", "No title")
